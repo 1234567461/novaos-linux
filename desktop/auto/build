@@ -1,0 +1,15 @@
+#!/bin/sh
+# NovaOS Linux - build the ISO
+# Usage: ./auto/build   (run from desktop/ directory)
+set -e
+
+cd "$(dirname "$0")/.."
+export NOVAOS_VERSION="${NOVAOS_VERSION:-1.0}"
+echo "==> NovaOS Linux ${NOVAOS_VERSION} desktop build"
+
+lb config 2>&1 | tail -5
+lb build 2>&1 | tail -20
+
+echo
+echo "==> ISO ready:"
+ls -lh live-image-*.hybrid.iso 2>/dev/null || ls -lh *.iso 2>/dev/null

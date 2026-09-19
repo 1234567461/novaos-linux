@@ -1,0 +1,6 @@
+#!/bin/sh
+# NovaOS Linux - clean previous build artifacts
+set -e
+lb clean --purge 2>/dev/null || true
+rm -rf build iso binary
+echo "cleaned"

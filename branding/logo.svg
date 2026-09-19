@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!-- NovaOS placeholder logo: stylized N over a globe -->
+  <rect width="512" height="512" rx="96" fill="#0b1f3a"/>
+  <circle cx="256" cy="256" r="150" fill="none" stroke="#2eaadc" stroke-width="24"/>
+  <ellipse cx="256" cy="256" rx="150" ry="62" fill="none" stroke="#2eaadc" stroke-width="24"/>
+  <line x1="256" y1="106" x2="256" y2="406" stroke="#2eaadc" stroke-width="24"/>
+  <path d="M160 190 L160 322 L352 190 L352 322" fill="none" stroke="#7ee0a3" stroke-width="28" stroke-linejoin="round"/>
+</svg>

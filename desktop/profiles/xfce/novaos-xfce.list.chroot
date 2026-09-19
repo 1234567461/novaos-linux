@@ -1,0 +1,8 @@
+# NovaOS XFCE profile - lightweight desktop for older hardware
+xfce4
+xfce4-terminal
+xfce4-power-manager
+xfce4-screenshooter
+lightdm
+task-xfce-desktop
+firmware-linux

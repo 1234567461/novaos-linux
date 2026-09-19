@@ -1,0 +1,3 @@
+# NovaOS apt archive: local overlay repository
+# (create this repo with reprepro; see docs/BUILD.md)
+deb [trusted=yes] file:/srv/novaos-repo bookworm main

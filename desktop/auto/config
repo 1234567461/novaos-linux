@@ -1,0 +1,32 @@
+#!/bin/sh
+# NovaOS Linux - live-build automatic configuration
+# Called by lb config; sets distribution, mirror, architecture, desktop.
+# Docs: https://live-team.pages.debian.net/live-manual/html/live-manual/example-tasks.html
+set -e
+
+LB_BOOTSTRAP_INCLUDE="apt-transport-https ca-certificates"
+LB_ARCHITECTURES="amd64"
+LB_BINARY_IMAGES="iso-hybrid"
+LB_BOOTLOADERS="grub-efi"
+LB_DEBIAN_SUITES="bookworm"
+LB_DEBIAN_SECURITY="true"
+LB_DISTRIBUTION="bookworm"
+LB_DISTRIBUTION_ARCHIVES="novaos local"
+LB_APT_INDICES="false"
+LB_APT_RECOMMENDS="true"
+LB_PARENT_ARCHIVE_AREAS="main contrib non-free non-free-firmware"
+LB_SYSTEM_LIVE="true"
+LB_ISO_APPLICATION="NovaOS Linux"
+LB_ISO_PREPARER="NovaOS Build Team"
+LB_ISO_PUBLISHER="NovaOS"
+LB_ISO_VOLUME="NovaOS 1.0"
+LB_ISO_APPLICATION_NAME="NovaOS"
+LB_INITRAMFS="live-boot"
+LB_INIT_SYSTEM="systemd"
+LB_SECURITY="true"
+LB_UPDATES="true"
+LB_HOOKS="config/hooks/normal"
+LB_PACKAGE_LISTS="config/package-lists"
+LB_INCLUDES="config/includes.chroot"
+LB_CUSTOM_APT="config/archives"
+LB_EFI_SECURE_BOOT="true"

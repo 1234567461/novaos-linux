@@ -1,0 +1,16 @@
+#!/bin/sh
+# NovaOS hooks - sshd enabled by default, UFW basic policy
+# Hook name: 1000-services.hook.chroot
+set -e
+
+systemctl enable ssh 2>/dev/null || true
+systemctl enable NetworkManager 2>/dev/null || true
+
+# sane firewall defaults (user can adjust)
+cat > /etc/ufw/applications.d/novaos-ssh <<'EOF'
+[NovaOS-SSH]
+title=NovaOS SSH
+description=Allow SSH administration
+ports=22/tcp
+EOF
+ufw allow 22/tcp 2>/dev/null || true

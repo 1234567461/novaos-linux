@@ -1,0 +1,49 @@
+# NovaOS Desktop - base system
+# (Debian bookworm; package names follow the bookworm archive)
+task-laptop
+task-english
+locales
+firmware-linux
+firmware-misc-nonfree
+linux-image-amd64
+
+# display server + desktop environment (GNOME on Wayland)
+task-gnome-desktop
+gdm3
+gnome-shell-extension-dash-to-dock
+
+# network & remote management
+openssh-server
+network-manager
+curl
+wget
+git
+tmux
+
+# development toolchain
+build-essential
+gdb
+python3
+python3-pip
+nodejs
+npm
+vim
+nano
+
+# office & media
+libreoffice-writer
+libreoffice-calc
+libreoffice-impress
+firefox-esr
+gimp
+vlc
+
+# system utilities
+htop
+neofetch
+ufw
+rsync
+unzip
+p7zip-full
+file
+tree

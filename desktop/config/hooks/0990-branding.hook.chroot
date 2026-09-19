@@ -1,0 +1,30 @@
+#!/bin/sh
+# NovaOS hooks - branding: /etc/motd, hostname, wallpaper install
+# Hook name: 0990-branding.hook.chroot
+set -e
+
+# machine identity
+echo "novaos" > /etc/hostname
+printf '%s\n' \
+    "==============================================" \
+    "  NovaOS Linux - built from novaos-linux repo" \
+    "  (Debian live-build based distribution)" \
+    "==============================================" > /etc/motd
+
+# default wallpaper (if shipped in includes.chroot/usr/share/novaos/wallpaper.png)
+if [ -f /usr/share/novaos/wallpaper.png ]; then
+    mkdir -p /usr/share/backgrounds/novaos
+    cp /usr/share/novaos/wallpaper.png /usr/share/backgrounds/novaos/default.png
+    # GNOME: drop a profile so new users see it
+    mkdir -p /etc/dconf/db/local.d
+    cat > /etc/dconf/db/local.d/00-wallpaper <<'EOF'
+[org/gnome/desktop/background]
+picture-uri='file:///usr/share/backgrounds/novaos/default.png'
+picture-uri-dark='file:///usr/share/backgrounds/novaos/default.png'
+EOF
+    cat > /etc/dconf/profile/user <<'EOF'
+user-db:user
+system-db:local
+EOF
+    dconf update 2>/dev/null || true
+fi
