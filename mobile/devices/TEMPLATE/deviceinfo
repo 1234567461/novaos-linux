@@ -1,0 +1,54 @@
+# NovaOS mobile - device template (postmarketOS deviceinfo format)
+#
+# COPY this file to mobile/devices/<vendor>-<codename>/deviceinfo and
+# replace every <PLACEHOLDER>.  Deviceinfo is the single most important
+# file for a port - pmbootstrap reads it to build and flash the image.
+# Every value must come from YOUR device, not from guessing.
+#
+# Reference format: https://wiki.postmarketos.org/wiki/Deviceinfo
+
+# --- identity ------------------------------------------------------------
+DEVICE_NAME="<Device display name>"            # e.g. "Galaxy A5 (2017)"
+DEVICE="<codename>"                            # e.g. a5y17lte
+DEVICE_INFO="\"<vendor> <model> (NovaOS port)\"" # e.g. "samsung a5y17lte"
+DEVICE_MANUFACTURER="<vendor>"                 # e.g. samsung
+
+# --- architecture / kernel ----------------------------------------------
+# From `adb shell uname -m`: armv7l / aarch64 / ...
+DEVICE_ARCH="<armv7|aarch64>"
+# Kernel package name in the pmOS/linux-* tree that this device uses.
+# Use "linux-postmarketos-mainline" only when the device has mainline
+# support; otherwise use the downstream package matching your kernel.
+DEVICE_KERNEL="<linux-postmarketos-mainline|linux-<vendor>>"
+
+# --- boot / flashing ------------------------------------------------------
+# How the device boots images: "fastboot", "heimdall", "0xffff",
+# "none" (recovery-flashable), or "uuu".  Check the pmOS wiki page for
+# the exact mode of your model.
+DEVICE_FLASH_METHOD="<fastboot|heimdall|none|...>"
+# Boot partition size in MB if the vendor requires a fixed size.
+DEVICE_BOOT_SIZE="<0>"
+
+# --- device tree / modules -----------------------------------------------
+# Compatible string from the device tree, e.g.
+#   adb shell "cat /proc/device-tree/compatible"
+DEVICE_DT_COMPATIBLE="<vendor,soc-board>"
+# Kernel modules that must be loaded for wifi/sound/etc. on this device.
+# Leave empty if the kernel has everything built in.
+DEVICE_MODULES="<wlan,snd-soc-codec, ...>"
+
+# --- UI / init ------------------------------------------------------------
+# User interface: phosh | plasma-mobile | sxmo
+DEVICE_UI="<phosh|plasma-mobile|sxmo>"
+# GPU driver family (from dmesg / pmOS wiki): "panfrost", "lima",
+# "mali", "adreno", "freedreno", ...
+DEVICE_GPU="<gpu-family>"
+
+# --- hardware description (for the UI to show sane settings) -------------
+DEVICE_SCREEN_WIDTH="<1080>"
+DEVICE_SCREEN_HEIGHT="<1920>"
+DEVICE_CHASSIS="handset"
+
+# --- initramfs ------------------------------------------------------------
+# "mkinitfs" hooks needed to boot: base, modloop, ... (pmOS defaults ok)
+DEVICE_INITFS="base modloop"
