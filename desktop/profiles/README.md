@@ -7,4 +7,7 @@
 # Available profiles:
 #   gnome    - full GNOME desktop (default, task-gnome-desktop)
 #   xfce     - lightweight XFCE for old hardware
-#   minimal  - no DE, only window manager (i3) + tools
+#   cli      - no desktop environment (server / headless, SSH-based)
+#              built with:
+#                cp profiles/cli/novaos-cli.list.chroot \
+#                   config/package-lists/novaos-desktop.list.chroot

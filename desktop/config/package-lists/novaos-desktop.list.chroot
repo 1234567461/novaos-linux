@@ -3,6 +3,8 @@
 task-laptop
 task-english
 locales
+fonts-noto-cjk
+fonts-noto-cjk-extra
 firmware-linux
 firmware-misc-nonfree
 linux-image-amd64

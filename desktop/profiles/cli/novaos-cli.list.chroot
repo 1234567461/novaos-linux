@@ -1,0 +1,35 @@
+# NovaOS CLI profile - no desktop environment (server / headless style)
+# Select with: lb config --packages-list novaos-cli
+#   or copy this file over novaos-desktop.list.chroot before building.
+#
+# base system
+task-laptop
+locales
+linux-image-amd64
+firmware-linux
+
+# remote management (headless admin)
+openssh-server
+network-manager
+curl
+wget
+git
+tmux
+rsync
+
+# development toolchain
+build-essential
+gdb
+python3
+python3-pip
+vim
+nano
+
+# system utilities
+htop
+neofetch
+ufw
+unzip
+p7zip-full
+file
+tree

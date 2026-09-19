@@ -1,0 +1,43 @@
+#!/bin/sh
+# NovaOS hooks - locale, fonts, keyboard
+# Hook name: 1100-locale.hook.chroot
+# Installs UTF-8 locales (Chinese + English), CJK fonts, and a sane
+# default keyboard layout.  The installer (scripts/install.sh) lets the
+# user pick language / font / keyboard at install time; this hook sets
+# the build-time defaults so the live ISO already works in both zh and en.
+set -e
+
+# --- locales: en + zh UTF-8 ---------------------------------------------
+cat > /etc/locale.gen <<'EOF'
+en_US.UTF-8 UTF-8
+zh_CN.UTF-8 UTF-8
+EOF
+locale-gen 2>/dev/null || true
+echo "LANG=en_US.UTF-8" > /etc/default/locale
+echo "LC_TIME=en_US.UTF-8" >> /etc/default/locale
+
+# --- fonts: CJK for Chinese rendering ------------------------------------
+# (fonts-noto-cjk is listed in the package lists; make sure it is present)
+if dpkg -s fonts-noto-cjk >/dev/null 2>&1; then
+    mkdir -p /etc/fonts/conf.d
+    ln -sf /usr/share/fontconfig/conf.avail/60-latin.conf \
+        /etc/fonts/conf.d/60-latin.conf 2>/dev/null || true
+    # prefer Noto Sans CJK for sans-serif fallback
+    cat > /etc/fonts/local.conf <<'EOF'
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+  <alias><family>sans-serif</family><prefer><family>Noto Sans CJK SC</family></prefer></alias>
+  <alias><family>monospace</family><prefer><family>Noto Sans Mono CJK SC</family></prefer></alias>
+</fontconfig>
+EOF
+fi
+
+# --- keyboard: default US, installer can reconfigure ----------------------
+cat > /etc/default/keyboard <<'EOF'
+XKBMODEL="pc105"
+XKBLAYOUT="us"
+XKBVARIANT=""
+XKBOPTIONS=""
+BACKSPACE="guess"
+EOF

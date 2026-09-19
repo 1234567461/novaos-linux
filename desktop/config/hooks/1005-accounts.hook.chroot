@@ -1,0 +1,55 @@
+#!/bin/sh
+# NovaOS hooks - multi-user, least privilege, audit
+# Hook name: 1005-accounts.hook.chroot
+#
+# Policy (per project requirement "防止有人乱修改，包括管理员"):
+#   1. every human uses a non-root account with sudo (least privilege)
+#   2. root is locked by default (unlock explicitly only when needed)
+#   3. all sudo invocations are logged (log_input/log_output)
+#   4. auditd watches identity/sudo/sshd files
+#   5. first login forces a password change
+set -e
+
+# --- default admin user ---------------------------------------------------
+# The installer normally creates the user interactively; this hook makes
+# sure a usable default exists on the live ISO too.
+if ! id novaos >/dev/null 2>&1; then
+    useradd -m -G sudo,users -s /bin/bash novaos
+fi
+echo 'novaos:novaos' | chpasswd
+chage -d 0 novaos 2>/dev/null || true    # force password change on first login
+
+# --- lock root unless explicitly enabled ----------------------------------
+passwd -l root 2>/dev/null || true
+
+# --- sudo hardening + full command logging --------------------------------
+mkdir -p /etc/sudoers.d
+cat > /etc/sudoers.d/novaos <<'EOF'
+Defaults log_input, log_output
+Defaults timestamp_timeout=5
+Defaults lecture=always
+%sudo ALL=(ALL:ALL) ALL
+EOF
+chmod 440 /etc/sudoers.d/novaos
+
+# --- auditd: track who changed what (admins included) ----------------------
+systemctl enable auditd 2>/dev/null || true
+mkdir -p /etc/audit/rules.d
+cat > /etc/audit/rules.d/novaos.rules <<'EOF'
+-w /etc/sudoers        -p wa -k sudoers
+-w /etc/sudoers.d      -p wa -k sudoers
+-w /etc/passwd         -p wa -k identity
+-w /etc/shadow         -p wa -k identity
+-w /etc/group          -p wa -k identity
+-w /etc/gshadow        -p wa -k identity
+-w /etc/ssh/sshd_config -p wa -k sshd
+-w /etc/systemd/system -p wa -k systemd
+-w /etc/crontab        -p wa -k cron
+-w /var/log/auth.log   -p wa -k authlog
+EOF
+
+# --- login tracking ---------------------------------------------------------
+if [ -f /etc/pam.d/login ]; then
+    grep -q pam_lastlog /etc/pam.d/login || \
+        echo "session required pam_lastlog.so showfailed" >> /etc/pam.d/login
+fi

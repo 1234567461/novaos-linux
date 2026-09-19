@@ -1,0 +1,49 @@
+name: build-iso
+
+# Builds the NovaOS desktop ISO in the cloud (no local root needed).
+# Trigger: click "Run workflow" on the Actions tab, or push to main.
+# Artifact: live-image-amd64.hybrid.iso (download from the run page).
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: 'Build profile (gnome | xfce | cli)'
+        required: false
+        default: 'gnome'
+  push:
+    branches: [main]
+
+jobs:
+  iso:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install live-build toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y live-build debian-archive-keyring \
+            xorriso isolinux syslinux-efi
+
+      - name: Configure (profile from workflow input or default gnome)
+        run: |
+          cd desktop
+          PROFILE="${{ github.event.inputs.profile || 'gnome' }}"
+          sed -i "s/^LB_PACKAGE_LISTS=.*/LB_PACKAGE_LISTS=\"config\/package-lists\"/" auto/config
+          if [ "$PROFILE" != "gnome" ]; then
+            cp "profiles/$PROFILE/novaos-$PROFILE.list.chroot" \
+               config/package-lists/novaos-desktop.list.chroot
+          fi
+          sudo ./auto/config
+
+      - name: Build ISO
+        run: cd desktop && sudo ./auto/build
+
+      - name: Upload ISO
+        uses: actions/upload-artifact@v4
+        with:
+          name: novaos-${{ github.event.inputs.profile || 'gnome' }}-iso
+          path: desktop/live-image-*.hybrid.iso
+          retention-days: 14
